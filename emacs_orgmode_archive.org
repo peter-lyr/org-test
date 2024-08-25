@@ -1,0 +1,514 @@
+:PROPERTIES:
+:ID: da5bad46-9209-48aa-8ab0-bd9cd0c3d365
+:END:
+#+title: emacs-orgmode-archive
+
+* ARCHIVE 手机端用orgzly和MGit来同步org笔记
+CLOSED: [2024-08-09 Fri 22:33] SCHEDULED: <2024-08-04 Sun>
+:PROPERTIES:
+:测试属性: 11
+:测试属性2: 22
+:END:
+测试属性
+[2024-08-06 Tue 09:15]
+** CANCELLED SCH 在手机上第一次尝试提交代码，失败了
+CLOSED: [2024-08-09 Fri 22:33]
+不在手机上修改和提交代码
+* ARCHIVE 一个项目下增加一些用来归档的subtree来管理状态稳定的任务
+- State "ARCHIVE" from "NEXT"       [2024-08-11 Sun 16:28] \\
+  目前增加两个类型的子树来归档状态稳定的子任务
+- State "NEXT" from [2024-08-11 Sun 16:17] \\
+  解决目前子树越来越多不好管理的问题
+增加那些子树呢？
+1. 目前在[[emacs orgmode]]下增加了[[emacs orgmode Archive]]和[[emacs orgmode Test]] \\
+   为了区别其他的同名子树，需要增加前缀
+* ARCHIVE 插入其他org文件的heading
+- State "ARCHIVE" from <2024-08-12 Mon 21:41>
+https://emacs.stackexchange.com/questions/19598/org-mode-link-to-heading-in-other-org-file
+先存储，在插入
+#+begin_src elisp
+  ;; 不用增加，已经配置了的
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c C-l") 'org-insert-link)
+#+end_src
+* CANCELLED spacemacs
+CLOSED: [2024-08-15 Thu 20:05]
+- State "CANCELLED"  from              [2024-08-15 Thu 20:05] \\
+  先取消一下，先不用spacemacs了，每次启动都慢的要死
+** 文档
+[[https://develop.spacemacs.org]]有好多个文档，先看QUICK_START
+[[https://develop.spacemacs.org/doc/QUICK_START.html]]
+** LATER 易忘的基础知识
+[2024-08-05 Mon 23:46]
+*** ARCHIVE c-u按键前缀
+CLOSED: [2024-08-05 Mon 23:58]
+比如`c-c .`插入时间，默认直接回车只有日期
+但是`c-u c-c .`此时默认直接回车会详细到分钟
+详读见[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Arguments.html]]
+*** ARCHIVE 如何快速把一个TODO移动到其他TODO下
+CLOSED: [2024-08-06 Tue 09:26]
+org-move-subtree-up , s k
+org-move-subtree-down , s j
+org-refile , s r
+见[[https://emacs.stackexchange.com/questions/55014/how-do-i-move-a-subtree-to-another-file]]
+这个是archive：
+[[https://orgmode.org/manual/Moving-subtrees.html]]
+*** ARCHIVE 数字自增自减
+CLOSED: [2024-08-07 Wed 16:14]
+org-increase-number-at-point
+C-M-S-<right>自增
+*** ARCHIVE 删除线怎么写
+CLOSED: [2024-08-07 Wed 17:13]
++用加号表示删除线+
+*** WAIT c-j向下5行
+<2024-08-07 Wed 20:02>
+*** ARCHIVE 有没有hop插件，有叫avy
+CLOSED: [2024-08-07 Wed 20:49]
+<2024-08-07 Wed 20:38>
+** DONE emacs失去焦点时立刻保存
+CLOSED: [2024-08-06 Tue 00:06]
+#+begin_src lisp
+  ;; https://www.bilibili.com/read/cv13666442/
+  ;; (add-hook 'focus-out-hook 'save-buffer); save current buffer
+  (add-hook 'focus-out-hook (lambda () (save-some-buffers t))); save all opened buffers
+#+end_src
+** DONE 刷新当前buffer
+CLOSED: [2024-08-06 Tue 11:55]
+search: spacemacs refresh current buffer
+#+begin_src lisp
+  ;; 刷新当前buffer
+  (defun my-refresh-cur-buffer()
+    (interactive)
+    (revert-buffer :ignore-auto :noconfirm))
+  (global-set-key (kbd "C-c C-r") 'my-refresh-cur-buffer)
+#+end_src
+*** CANCELLED 无法定义F5按键映射
+CLOSED: [2024-08-06 Tue 11:54]
+[2024-08-06 Tue 11:19]
+改用C-c C-r
+** LATER 切换输入法
+spacemacs set input method
+见set-input-method
+[[https://develop.spacemacs.org/layers/+intl/chinese/README.html]]
+** DONE 自动打开org文件发生在emacs上电时，重载el配置时取消下
+- State "DONE" from "GATHER"     [2024-08-11 Sun 12:22] \\
+  见[[setq org-todo-keywords变量不会立刻生效]]
+- State "GATHER" from <2024-08-11 Sun 12:08> \\
+  在配置文件~\.spacemacs.d\init.el修改为：
+  #+begin_src elisp
+    (setq org-todo-keywords '((sequence
+       "GATHER(g@)" ; 修改前为"GATHER(g!)"
+       "NEXT(n!)" "LATER(l!)" "WAIT(w@)" "MAYBE(m@)" "|"
+       "DONE(d@/!)" "CANCELLED(c@)" "ARCHIVE(a!)")))
+  #+end_src
+  并按按键`SPC f e R'后，并没有立即生效。
+  再尝试把它放到*scratch*buffer中，按`C-x C-e'，依旧没有生效，难道只能重启emacs才行？
+  [2024-08-11 Sun 12:15]
+  当我按`C-h v'，org-todo-keywords RET后，发现它的值已经更新到了
+** DONE iBuffer layer
+- State "DONE" from <2024-08-12 Mon 11:13>
+#+begin_src elisp
+  dotspacemacs-configuration-layers
+  '(
+    (ibuffer :variables ibuffer-group-buffers-by 'projects))
+#+end_src
+* CANCELLED elisp
+CLOSED: [2024-08-15 Thu 20:08]
+- State "CANCELLED"  from              [2024-08-15 Thu 20:08] \\
+  先关掉了，毕竟自己目前不打算去自己写emacs配置
+** ARCHIVE progn
+CLOSED: [2024-08-09 Fri 23:19]
+https://zhidao.baidu.com/question/539672818.html
+#+begin_src doc
+（progn
+....
+....
+）
+是将里边的无数个语句当成一句，
+#+end_src
+除了progn，let命令也可以将很多语句组合起来
+#+begin_src elisp
+(let ((local-name "you"))
+  (switch-to-buffer-other-window "*test*")
+  (erase-buffer)
+  ;; (hello local-name)
+  (other-window 1))
+#+end_src
+** WAIT learnxinyminutes.com elisp
+https://learnxinyminutes.com/docs/files/learn-emacs-lisp-zh.el
+*** DONE learnxinyminutes.com elisp 第二小结结束
+    CLOSED: [2024-08-09 Fri 23:37]
+    <2024-08-09 Fri 23:36>
+    ** WAIT learnxinyminutes.com elisp 第3小结
+<2024-08-09 Fri 23:38>
+* DONE 电脑端emacs简单测试
+CLOSED: [2024-08-09 Fri 22:32]
+** CANCELLED evil-mode的TAB键和org-mode的TAB键冲突了(转spacemacs了)
+CLOSED: [2024-08-05 Mon 23:18] SCHEDULED: <2024-08-04 Sun>
+在开启evil后，TAB键同C-i，和C-o一样，往前或往后去跳转当前光标
+思路：
+1. 用一个不完全模式的vi插件，忘记是什么了
+2. 改变按键映射，继续用evil插件
+** CANCELLED 在只有evil插件的emacs上测试(转spacemacs了)
+CLOSED: [2024-08-05 Mon 23:16]
+*** DONE orgmode能开始用起来
+CLOSED: [2024-08-04 Sun 22:34] DEADLINE: <2024-08-04 Sun 21:30> SCHEDULED: <2024-08-04 Sun>
+有文档，看了一部分，应该算是入门了
+** DONE 删除org文件的序言，配置到emacs配置中去
+CLOSED: [2024-08-04 Sun 15:36]
+[2024-08-10 Sat 22:30]补充：
+spacemacs的配置在~/.spacemacs.d/init.el文件中
+** DONE 在只有spacemacs上测试
+CLOSED: [2024-08-05 Mon 23:21]
+[2024-08-05 Mon 15:08]
+* CANCELLED doomemacs
+CLOSED: [2024-08-18 Sun 21:13]
+- State "CANCELLED"  from "WAIT"       [2024-08-18 Sun 21:13]
+- State "WAIT"       from              [2024-08-18 Sun 21:02] \\
+  doom也麻烦，很多问题，还是自己配置吧
+doom的nerd字体不用用hack，需要在emacs下安装插件
+https://github.com/domtronn/all-the-icons.el
+M-x all-the-icons-install-fonts
+选择一个路径去下载字体
+在双击下载好的字体，安装到Windows下，再重启emacs，缺失的字体就回来了
+* DONE orgmode
+CLOSED: [2024-08-18 Sun 21:14] DEADLINE: <2024-08-31 Sat> SCHEDULED: <2024-08-04 Sun>
+- State "DONE"       from "LATER"      [2024-08-18 Sun 21:14] \\
+  虽然有很多问题没有解答，没有更新，但基本已经入门了
+- State "LATER"      from              [2024-08-15 Thu 20:06] \\
+  orgmode是我使用emacs的原因，没有之一，所以先不关，后面还会到这里做笔记
+目标：有一套成熟的记笔记的方案
+** WAIT 基操
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:56]
+*** DONE org-priority最高优先级是A
+CLOSED: [2024-08-06 Tue 11:56]
+[[https://orgmode.org/manual/Priorities.html]]
+*** DONE org文件导出html
+CLOSED: [2024-08-07 Wed 09:33]
+C-c C-e h h (org-html-export-to-html)
+见[[https://emacsdocs.org/docs/org/HTML-export-commands#:~:text=13.9.1%20HTML%20export%20commands%20%7C%20Emacs%20Docs%2013.9.1,HTML%20and%20opens%20it%20in%20a%20web%20browser.]]
+*** DONE 表格操作
+CLOSED: [2024-08-07 Wed 13:57]
+[2024-08-07 Wed 10:02]
+[[https://orgmode.org/manual/Built_002din-Table-Editor.html]]
+[[https://github.com/casouri/valign]]
+**** DONE spacemacs每次打开会先删除valign再安装一次，导致打开时间从5秒增加到15秒
+CLOSED: [2024-08-07 Wed 14:09]
+[2024-08-07 Wed 11:59]
+[2024-08-07 Wed 13:56]解决问题[[https://emacs-china.org/t/spacemacs/21174/5]]
+#+begin_src lisp
+  dotspacemacs-configuration-layers
+  '(
+    (org :variables org-enable-valign t)
+    )
+#+end_src
+*** MAYBE 表格怎么复制单列的内容
+- State "MAYBE" from [2024-08-11 Sun 00:39]
+*** WAIT 怎么表示数学latex公式等式
+*** DONE 表格怎么写计算表达式
+- State "DONE" from [2024-08-11 Sun 00:38]
+| Hex | Dec |
+|-----+-----|
+| 1A  |  26 |
+| 2B  |  43 |
+| 3C  |  60 |
+#+TBLFM: $2='(string-to-number $1 16)
+| Hex 1 | Hex 2 | Diff |
+|-------+-------+------|
+| 1A    | 0A    | 0x10 |
+| 2B    | 1B    | 0x10 |
+| 3C    | 2C    | 0x10 |
+#+TBLFM: $3='(format "0x%X" (- (string-to-number $1 16) (string-to-number $2 16)))
+*** DONE setq org-todo-keywords变量不会立刻生效
+- State "DONE" from "GATHER"     [2024-08-11 Sun 12:22] \\
+  解决方法是重启org的buffer，具体操作是：
+  1. 按SPC b d
+  2. 按SPC b h
+  3. 找到刚刚打开的org buffer，打开
+- State "GATHER" from [2024-08-11 Sun 12:21] \\
+  见[[自动打开org文件发生在emacs上电时，重载el配置时取消下]]
+*** LATER subtree
+要尽可能的把重要的信息突出出来
+在每个节点下面，增加一个节点，命名为-，来放不重要的过程
+如果所谓的不重要的过程挺多的，那就不能命名为-，看情况
+**** DONE 只显示某些子树
+CLOSED: [2024-08-06 Tue 10:44]
+[2024-08-06 Tue 10:27]
+c-c /
+见[[https://orgmode.org/manual/Sparse-Trees.html]]
+**** DONE 隐藏其他子树
+CLOSED: [2024-08-06 Tue 10:36]
+search: emacs orgmode hide other subtree
+C-x n s     (org-narrow-to-subtree)
+    Narrow buffer to current subtree. 
+** WAIT 仓库管理
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:55]
+*** 只用一个仓库记录所有类型的笔记
+*** 记笔记的仓库只上传.org类型的文件
+*** DONE 其他类型的文件放到其他仓库（目前打算只增加一个仓库来放）
+CLOSED: [2024-08-07 Wed 16:05]
+在org仓库增加一个外链的仓库data
+*** ARCHIVE git仓库增加外部仓库
+CLOSED: [2024-08-07 Wed 16:06]
+https://geek-docs.com/git/git-questions/169_git_how_to_add_a_git_repository_as_a_shared_dependency_of_another_git_repository.html
+#+begin_src shell
+git submodule add git@github.com:peter-lyr/data.git data
+git submodule add -f git@github.com:peter-lyr/data.git data
+git commit -m "add external repo: data"
+git push
+#+end_src
+** DONE 标签管理                                                  :updating:
+- State "DONE" from "NEXT"       [2024-08-11 Sun 00:27]
+- State "NEXT" from [2024-08-11 Sun 00:23]
+  增加一些常用的标签，比如
+  1. updating，随时可以快速找到它，记录并更新
+  2. getuseto，我们希望自己需要养成的习惯，以便自己忘记，可以随时提醒自己 \\
+     英文释义：逐渐习惯于，适应：指逐渐适应某种新的环境、情况或习惯。
+** DONE 先在org记录再去搜索                                       :getuseto:
+CLOSED: [2024-08-06 Tue 10:21]
+[2024-08-06 Tue 00:28]
+后面整理时总是能找到它应该去的位置
+[2024-08-11 Sun 00:22]也就是GATHER任务
+** 笔记管理理论学习，比如GTD等，有什么想法这里记录下              :updating:
+遇到一些复杂的情况，找不到好的处理办法
+这里先记录一下
+[2024-08-11 Sun 00:34]
+以下是我的观点：
+1. 任务状态只是方便我们管理时间
+2. 标签才是我们分类最重要的手段
+[2024-08-11 Sun 12:00]
+** CANCELLED 老是忘记把刚创建的heading时间戳改为active
+CLOSED: [2024-08-25 Sun 17:02]
+:LOGBOOK:
+- State "CANCELLED"  from "WAIT"       [2024-08-25 Sun 17:02]
+:END:
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:55]
+- State "LATER" from <2024-08-11 Sun 13:00> \\
+  见[[org的每个标题都需要标明什么？]]
+** DONE org的每个标题都需要标明什么？
+- State "DONE" from [2024-08-11 Sun 13:02] \\
+  目前有六个
+表明下语文课学到的故事小说6要素吧：
+1. 时间 - GATHER时已经给了当时的时间戳，目前它是inactive的，需要手动改成active的，才能在agenda里看到
+2. 地点 - 如果有，也放标签里
+3. 人物 - 如果是别人，则把它放到标签里
+4. 起因 - GATHER时已经给了原因，我们起标题名，一般是遵循[[org的heading起名要遵循什么原则？]]
+5. 经过 - 这个是不断更新的
+6. 结果 - 最终都会有一个结果
+** CANCELLED org的heading起名要遵循什么原则？
+CLOSED: [2024-08-25 Sun 17:02]
+:LOGBOOK:
+- State "CANCELLED"  from "WAIT"       [2024-08-25 Sun 17:02]
+:END:
+- State "WAIT" from "NEXT"       [2024-08-11 Sun 12:45] \\
+  需要灵感来继续完善
+- State "NEXT" from [2024-08-11 Sun 12:36] \\
+  见[[org的每个标题都需要标明什么？]]
+*** org的heading起名要遵循的原则                                  :updating:
+- 如果是任务，则需要写要做什么
+- 如果是疑问，则需要写出是什么疑问，最好再加一个问号
+这两个都是需要去完成或者解答的，一般都要给个[[任务状态]]
+- 如果是名词，则不需要设置[[任务状态]]，比如当前的heading
+** DONE updating标签和WAIT[[任务状态]]是不是重复了？
+- State "DONE" from "LATER"      [2024-08-11 Sun 12:57] \\
+  先认为没有重复，而是补充吧，毕竟其他任务状态也可以设置updating标签
+- State "LATER" from <2024-08-11 Sun 12:47> \\
+  见[[org的heading起名要遵循什么原则？]]
+** CANCELLED orgmode/worg是什么？
+CLOSED: [2024-08-25 Sun 17:02]
+:LOGBOOK:
+- State "CANCELLED"  from "MAYBE"      [2024-08-25 Sun 17:02]
+:END:
+- State "MAYBE" from "LATER"      [2024-08-11 Sun 00:16] \\
+  等org了解完了再去了解worg吧
+[[https://orgmode.org/worg/]]
+[[https://orgmode.org/worg/org-tutorials/index.html]]
+** CANCELLED 重复任务的管理
+CLOSED: [2024-08-25 Sun 17:02]
+:LOGBOOK:
+- State "CANCELLED"  from "WAIT"       [2024-08-25 Sun 17:02]
+:END:
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:55]
+<2024-08-07 Wed 23:25>
+https://www.youtube.com/watch?v=nbC-gL5wcf4&list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE&index=4
+** CANCELLED deadline过期了怎么办？
+CLOSED: [2024-08-25 Sun 17:02]
+:LOGBOOK:
+- State "CANCELLED"  from "WAIT"       [2024-08-25 Sun 17:02]
+:END:
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:55]
+** CANCELLED DEADLINE和SCHEDULED该怎么用好？
+CLOSED: [2024-08-25 Sun 17:01]
+:LOGBOOK:
+- State "CANCELLED"  from "WAIT"       [2024-08-25 Sun 17:01]
+:END:
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:55]
+- State "LATER" from [2024-08-11 Sun 00:13] \\
+  不太清楚什么时候用，怎么用
+** CANCELLED 以日报的形式导出
+CLOSED: [2024-08-25 Sun 17:01]
+:LOGBOOK:
+- State "CANCELLED"  from "MAYBE"      [2024-08-25 Sun 17:01]
+:END:
+- State "MAYBE" from "LATER"      [2024-08-11 Sun 00:07] \\
+  这个似乎不那么重要，毕竟我可以单独给它安排一个任务，并不需要话很多时间
+orgmode以日报的形式导出
+** CANCELLED 任务日志及时间戳
+CLOSED: [2024-08-25 Sun 17:00]
+:LOGBOOK:
+- State "CANCELLED"  from "WAIT"       [2024-08-25 Sun 17:00]
+:END:
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:55]
+- State "LATER" from "NEXT"       [2024-08-11 Sun 00:03] \\
+   [[任务状态]]
+- State "NEXT" from "GATHER"     [2024-08-10 Sat 23:34]
+- State "GATHER" from "NEXT"       [2024-08-10 Sat 23:30]
+*** CANCELLED 任务完成时更新日志或时间戳
+- State "CANCELLED" from [2024-08-10 Sat 23:55] \\
+  [[任务状态变化时更新日志或时间戳]]
+#+begin_src elisp
+;; #+STARTUP: logdone
+(setq org-log-done 'note)
+#+end_src
+*** DONE 任务状态                                                :updating:
+CLOSED: [2024-08-25 Sun 17:00]
+:LOGBOOK:
+- State "DONE"       from "LATER"      [2024-08-25 Sun 17:00]
+:END:
+- State "LATER" from "ARCHIVE"    [2024-08-10 Sat 23:59] \\
+  任务状态个数和种类还需要继续完善中
+- State "ARCHIVE" from [2024-08-10 Sat 23:44]
+| index | english        | short | chinese | 描述                                  |
+|-------+----------------+-------+---------+---------------------------------------|
+|     1 | collect/gather | g     | 收集    | 随时随地进行，有空了再整理                |
+|     2 | next           | n     | 下一步   | 正在做的事情，越少越好                   |
+|     3 | later          | l     | 稍后    | 从下一步退下来，不那么紧急                |
+|     4 | wait           | w     | 等待委派 | 自己该做的已经做了，需要等待别人的下一步指示 |
+|     5 | maybe          | m     | 将来也许 | 可做可不做                             |
+|     6 | done           | d     | 已完成   | 当前自认为已做完的                       |
+|     7 | cancelled      | c     | 取消    | 相当于回收站                            |
+|     8 | archive        | a     | 归档    | 便于回顾                               |
+https://linux.cn/article-10327-1.html
+*** DONE 任务状态变化时更新日志或时间戳
+- State "DONE" from [2024-08-10 Sat 23:56] \\
+  这样任务的每次状态更新都有迹可循了
+则取消[[任务完成时更新日志或时间戳]]
+#+begin_src lisp
+  (setq org-todo-keywords '((sequence
+       "GATHER(g!)" "NEXT(n!)" "LATER(l!)" "WAIT(w@)" "MAYBE(m@)" "|"
+       "DONE(d@/!)" "CANCELLED(c@)" "ARCHIVE(a!)")))
+  (setq org-log-done nil)
+#+end_src
+** CANCELLED 内容管理该划分为什么任务
+CLOSED: [2024-08-25 Sun 17:01]
+:LOGBOOK:
+- State "CANCELLED"  from "WAIT"       [2024-08-25 Sun 17:01]
+:END:
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:55]
+- State "LATER" from [2024-08-11 Sun 00:09] \\
+  目前没有思路，还没遇到
+不关注时间的放这里
+继续细分（暂无思路）
+** CANCELLED 在emacs内的双向链接用起来不方便
+CLOSED: [2024-08-25 Sun 16:58] SCHEDULED: <2024-08-12 Mon 21:46>
+:LOGBOOK:
+- State "CANCELLED"  from "WAIT"       [2024-08-25 Sun 16:58]
+:END:
+- State "WAIT"       from "LATER"      [2024-08-15 Thu 20:55]
+** CANCELLED 什么时候要给任务状态，什么时候又不需要？
+CLOSED: [2024-08-25 Sun 17:01]
+:LOGBOOK:
+- State "CANCELLED"  from "LATER"      [2024-08-25 Sun 17:01]
+:END:
+- State "LATER"      from              [2024-08-15 Thu 20:56]
+[2024-08-15 Thu 20:52]
+在一个客户问题中，为此创建一个org文件，会创建多个heading，这些heading需不需要给个任务状态呢？
+** CANCELLED 什么任务需要给一个计划时间，结束时间，日程记录里改怎么用好这些时间？
+CLOSED: [2024-08-25 Sun 17:01]
+:LOGBOOK:
+- State "CANCELLED"  from "LATER"      [2024-08-25 Sun 17:01]
+:END:
+- State "LATER"      from              [2024-08-15 Thu 20:55]
+** CANCELLED 这周的总结整理有些乱，做了很多事情，但是总结下来却只有几件事情
+CLOSED: [2024-08-25 Sun 17:01] SCHEDULED: <2024-08-16 Fri 17:30>
+:LOGBOOK:
+- State "CANCELLED"  from              [2024-08-25 Sun 17:01]
+:END:
+
+* DONE org-roam
+CLOSED: [2024-08-18 Sun 21:15]
+- State "DONE"       from "LATER"      [2024-08-18 Sun 21:15]
+- State "LATER"      from              [2024-08-15 Thu 20:07] \\
+  这个是增强orgmode使用的，也必不可少，但目前先不用过多关注这个
+- State "GATHER" from <2024-08-11 Sun 18:29> \\
+  查双向链接查到org-roam，过来学习一下
+[2024-08-11 Sun 20:31]
+** org-roam的优势
+1. 双向链接
+** DONE org-roam如何在所有地方都出现的同一个节点一次性完成重命名
+- State "DONE" from [2024-08-11 Sun 21:18] \\
+  似乎不需要关心这个问题，原因有二：
+  1. org-roam-node-insert插入一个节点时，它是根据ID属性和+title来插入的
+  2. 链接的描述并不影响正常的跳转
+<2024-08-11 Sun 21:17>
+** 现在可以开始用org-roam了
+*** dotspacemacs.el配置
+#+begin_src elisp
+  ;; org-roam
+  (use-package org-roam
+    :ensure t
+    :custom
+    (org-roam-directory (file-truename "~/DEPEI/Repos/org"))
+    ;; 不需要，spacemacs有自己的快捷键SPC a o r l
+    ;; :bind (("C-c n l" . org-roam-buffer-toggle)
+    ;;        ("C-c n f" . org-roam-node-find)
+    ;;        ("C-c n i" . org-roam-node-insert))
+    :config
+    ;; If you're using a vertical completion framework, you might want a more informative completion interface
+    (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:30}" 'face 'org-tag)))
+    (org-roam-db-autosync-mode)
+    ;; If using org-roam-protocol
+    (require 'org-roam-protocol))
+#+end_src
+** DONE 刚新建一个中文命名的节点会卡好一会
+- State "DONE" from "LATER"      [2024-08-12 Mon 10:22] \\
+  重启emacs后，好像不会了，挺快的
+- State "LATER" from <2024-08-12 Mon 10:14> \\
+  节点越多效率越低
+
+* DONE pure emacs
+CLOSED: [2024-08-18 Sun 21:23]
+- State "DONE"       from "WAIT"       [2024-08-18 Sun 21:23] \\
+  还是用evil插件，不然在emacs上使用效率太低了
+- State "WAIT"       from              [2024-08-15 Thu 20:04] \\
+  目前在原生emacs上使用，一些简单的快捷键已经够用了，经常忘记的在这里记录一下
+** CANCELLED 尝试使用上次frame的size和pos，但好像没找到没有好的方法
+CLOSED: [2024-08-25 Sun 16:59] SCHEDULED: <2024-08-15 Thu 16:21>
+:LOGBOOK:
+- State "CANCELLED"  from "MAYBE"      [2024-08-25 Sun 16:59]
+:END:
+
+** 复制当前buffer的文件的绝对路径
+1. `M-0 w` （这个需要在dired用）
+** 光标的前进和后退
+It is bound to C-x C-@ and C-x C-SPC.
+(pop-global-mark)
+好像没有像vim里的c-o c-i这样的前进和后退
+** undo redo
+redo: C-?
+undo: C-x u
+** 不再使用use-package来安装插件，很多不全的
+使用radian-software/straight.el来安装插件？
+还是package-vc.el？
+** 如何选择文本并移动？
+https://blog.csdn.net/gyzhe/article/details/46128239
+[Emacs学习笔记]选中文字
+It is bound to C-x C-x.
+(exchange-point-and-mark &optional ARG)
+** 上电固定frame大小和位置
+只能固定大小，不能固定位置
+** 如何快速已到最后一行
+It is bound to C-<end> and M->.
+It can also be invoked from the menu: Edit → Go To → Goto End of
+Buffer
+(end-of-buffer &optional ARG)
